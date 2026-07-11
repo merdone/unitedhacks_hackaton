@@ -59,9 +59,9 @@ export default function Register() {
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-6">
           <div>
-            <label className="block text-sm font-medium text-slate-300 mb-1.5">Name *</label>
+            <label className="block text-sm font-medium text-slate-300 mb-2">Name *</label>
             <input
               id="register-name"
               type="text"
@@ -74,7 +74,7 @@ export default function Register() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-slate-300 mb-1.5">Email *</label>
+            <label className="block text-sm font-medium text-slate-300 mb-2">Email *</label>
             <input
               id="register-email"
               type="email"
@@ -87,7 +87,7 @@ export default function Register() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-slate-300 mb-1.5">Password *</label>
+            <label className="block text-sm font-medium text-slate-300 mb-2">Password *</label>
             <input
               id="register-password"
               type="password"
@@ -100,9 +100,9 @@ export default function Register() {
             />
           </div>
 
-          <div className="grid grid-cols-3 gap-3">
+          <div className="grid grid-cols-3 gap-4">
             <div>
-              <label className="block text-sm font-medium text-slate-300 mb-1.5">Age</label>
+              <label className="block text-sm font-medium text-slate-300 mb-2">Age</label>
               <input
                 id="register-age"
                 type="number"
@@ -113,7 +113,7 @@ export default function Register() {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-slate-300 mb-1.5">Weight (kg)</label>
+              <label className="block text-sm font-medium text-slate-300 mb-2">Weight (kg)</label>
               <input
                 id="register-weight"
                 type="number"
@@ -125,7 +125,7 @@ export default function Register() {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-slate-300 mb-1.5">Height (cm)</label>
+              <label className="block text-sm font-medium text-slate-300 mb-2">Height (cm)</label>
               <input
                 id="register-height"
                 type="number"
@@ -137,14 +137,16 @@ export default function Register() {
             </div>
           </div>
 
-          <button
-            id="register-submit"
-            type="submit"
-            disabled={loading}
-            className="btn-gradient w-full text-center disabled:opacity-50"
-          >
-            <span>{loading ? 'Creating account...' : 'Create Account'}</span>
-          </button>
+          <div className="pt-2">
+            <button
+              id="register-submit"
+              type="submit"
+              disabled={loading}
+              className="btn-gradient w-full text-center disabled:opacity-50"
+            >
+              <span>{loading ? 'Creating account...' : 'Create Account'}</span>
+            </button>
+          </div>
         </form>
 
         <p className="text-center text-sm text-slate-400 mt-6">

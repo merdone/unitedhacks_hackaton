@@ -90,16 +90,16 @@ export default function ProfileSetup() {
         <p className="text-slate-400 mb-8">Complete your profile to get personalized recommendations</p>
       </div>
 
-      <form onSubmit={handleSave} className="space-y-6">
+      <form onSubmit={handleSave} className="space-y-8">
         {/* Basic Info */}
-        <div className="glass-card p-6 animate-fade-in-up stagger-1">
-          <h2 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-            <span className="w-8 h-8 rounded-lg bg-cyan-500/20 flex items-center justify-center text-cyan-400 text-sm">
+        <div className="glass-card p-8 animate-fade-in-up stagger-1">
+          <h2 className="text-xl font-semibold text-white mb-6 flex items-center gap-3">
+            <span className="w-10 h-10 rounded-lg bg-cyan-500/20 flex items-center justify-center text-cyan-400 text-lg">
               👤
             </span>
             Basic Information
           </h2>
-          <div className="space-y-4">
+          <div className="space-y-6">
             <div>
               <label className="block text-sm font-medium text-slate-300 mb-1.5">Full Name</label>
               <input
@@ -151,9 +151,9 @@ export default function ProfileSetup() {
         </div>
 
         {/* Medical Conditions */}
-        <div className="glass-card p-6 animate-fade-in-up stagger-2">
-          <h2 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-            <span className="w-8 h-8 rounded-lg bg-rose-500/20 flex items-center justify-center text-rose-400 text-sm">
+        <div className="glass-card p-8 animate-fade-in-up stagger-2 mt-8">
+          <h2 className="text-xl font-semibold text-white mb-6 flex items-center gap-3">
+            <span className="w-10 h-10 rounded-lg bg-rose-500/20 flex items-center justify-center text-rose-400 text-lg">
               🏥
             </span>
             Medical Conditions

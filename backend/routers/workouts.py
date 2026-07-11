@@ -31,8 +31,16 @@ async def start_workout(
     )
     db.add(session)
     await db.flush()
-    await db.refresh(session)
-    return session
+    
+    # Query it back with eager loading to satisfy Pydantic
+    result = await db.execute(
+        select(WorkoutSession)
+        .options(selectinload(WorkoutSession.logs))
+        .where(WorkoutSession.id == session.id)
+    )
+    loaded_session = result.scalar_one()
+    
+    return loaded_session
 
 
 @router.post("/{session_id}/log", status_code=201)
@@ -96,16 +104,12 @@ async def complete_workout(
             weight=log_data.weight,
             rpe=log_data.rpe,
         )
-        db.add(log)
+        session.logs.append(log)
 
     await db.flush()
 
-    # Calculate total volume (reps × weight for all logs)
-    log_result = await db.execute(
-        select(WorkoutLog).where(WorkoutLog.session_id == session_id)
-    )
-    all_logs = log_result.scalars().all()
-    total_volume = sum(log.reps * log.weight for log in all_logs)
+    # Calculate total volume from relationship
+    total_volume = sum(log.reps * log.weight for log in session.logs)
 
     # Finalize session
     session.end_time = datetime.datetime.utcnow()
@@ -122,5 +126,4 @@ async def complete_workout(
         db.add(feedback)
 
     await db.flush()
-    await db.refresh(session, attribute_names=["logs"])
     return session

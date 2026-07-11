@@ -100,7 +100,7 @@ export default function Layout({ children }) {
       )}
 
       {/* Page content */}
-      <main className="relative z-10 max-w-5xl mx-auto px-4 py-8">
+      <main className="relative z-10 max-w-5xl mx-auto px-4 py-12">
         {children}
       </main>
     </div>

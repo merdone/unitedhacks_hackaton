@@ -82,19 +82,19 @@ export default function PreWorkoutCheckin() {
         <p className="text-slate-400 mb-8">How are you feeling today? This helps our AI tailor your workout.</p>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-5">
+      <form onSubmit={handleSubmit} className="space-y-6">
         {/* Sliders */}
         {sliderConfig.map((slider, index) => (
           <div
             key={slider.key}
-            className={`glass-card p-5 animate-fade-in-up stagger-${index + 1}`}
+            className={`glass-card p-6 md:p-8 animate-fade-in-up stagger-${index + 1}`}
           >
-            <div className="flex items-center justify-between mb-3">
-              <div className="flex items-center gap-2">
-                <span className="text-xl">{slider.icon}</span>
-                <label className="text-sm font-semibold text-white">{slider.label}</label>
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-3">
+                <span className="text-2xl">{slider.icon}</span>
+                <label className="text-base font-semibold text-white">{slider.label}</label>
               </div>
-              <div className={`text-2xl font-bold bg-gradient-to-r ${slider.color} bg-clip-text text-transparent`}>
+              <div className={`text-3xl font-bold bg-gradient-to-r ${slider.color} bg-clip-text text-transparent`}>
                 {form[slider.key]}
               </div>
             </div>
@@ -105,9 +105,9 @@ export default function PreWorkoutCheckin() {
               max="10"
               value={form[slider.key]}
               onChange={(e) => handleSliderChange(slider.key, e.target.value)}
-              className="w-full"
+              className="w-full mt-2"
             />
-            <div className="flex justify-between text-xs text-slate-500 mt-1">
+            <div className="flex justify-between text-sm text-slate-500 mt-2 font-medium">
               <span>{slider.lowLabel}</span>
               <span>{slider.highLabel}</span>
             </div>
@@ -115,19 +115,19 @@ export default function PreWorkoutCheckin() {
         ))}
 
         {/* Voice Input */}
-        <div className="animate-fade-in-up stagger-5">
+        <div className="animate-fade-in-up stagger-5 py-2">
           <VoiceRecorder onTranscription={handleVoiceTranscription} />
         </div>
 
         {/* Additional Notes */}
-        <div className="glass-card p-5 animate-fade-in-up" style={{ animationDelay: '0.6s', opacity: 0 }}>
-          <label className="block text-sm font-semibold text-white mb-2 flex items-center gap-2">
+        <div className="glass-card p-6 md:p-8 animate-fade-in-up" style={{ animationDelay: '0.6s', opacity: 0 }}>
+          <label className="block text-base font-semibold text-white mb-3 flex items-center gap-2">
             <span>📝</span> Additional Notes
           </label>
           <textarea
             id="checkin-notes"
-            rows={3}
-            className="input-field resize-none"
+            rows={4}
+            className="input-field resize-none text-base p-4"
             placeholder="Any pain, discomfort, or things to note..."
             value={form.additional_notes}
             onChange={(e) => setForm({ ...form, additional_notes: e.target.value })}
@@ -135,14 +135,16 @@ export default function PreWorkoutCheckin() {
         </div>
 
         {/* Submit */}
-        <button
-          id="checkin-submit"
-          type="submit"
-          disabled={loading}
-          className="btn-gradient w-full text-center disabled:opacity-50"
-        >
-          <span>{loading ? 'Submitting...' : 'Get AI Recommendation →'}</span>
-        </button>
+        <div className="pt-4">
+          <button
+            id="checkin-submit"
+            type="submit"
+            disabled={loading}
+            className="btn-gradient w-full text-center text-lg py-4 disabled:opacity-50"
+          >
+            <span>{loading ? 'Submitting...' : 'Get AI Recommendation →'}</span>
+          </button>
+        </div>
       </form>
     </div>
   );

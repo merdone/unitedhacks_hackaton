@@ -94,7 +94,7 @@ export default function ActiveWorkout() {
   }
 
   return (
-    <div className="max-w-2xl mx-auto space-y-5">
+    <div className="max-w-2xl mx-auto space-y-8">
       {/* Header with timer */}
       <div className="flex items-center justify-between animate-fade-in-up">
         <div>
@@ -108,7 +108,7 @@ export default function ActiveWorkout() {
       </div>
 
       {/* Live Stats */}
-      <div className="grid grid-cols-2 gap-3 animate-fade-in-up stagger-1">
+      <div className="grid grid-cols-2 gap-4 animate-fade-in-up stagger-1">
         <div className="glass-card p-4 text-center">
           <p className="text-xs text-slate-500 uppercase font-medium">Total Volume</p>
           <p className="text-xl font-bold text-white mt-1">{currentVolume.toLocaleString()} kg</p>
@@ -120,18 +120,18 @@ export default function ActiveWorkout() {
       </div>
 
       {/* Add Set Form */}
-      <div className="glass-card p-5 animate-fade-in-up stagger-2">
-        <h3 className="text-sm font-semibold text-white mb-3 flex items-center gap-2">
-          <span className="w-6 h-6 rounded bg-cyan-500/20 flex items-center justify-center text-xs text-cyan-400">+</span>
+      <div className="glass-card p-6 md:p-8 animate-fade-in-up stagger-2">
+        <h3 className="text-base font-semibold text-white mb-4 flex items-center gap-3">
+          <span className="w-8 h-8 rounded-lg bg-cyan-500/20 flex items-center justify-center text-sm text-cyan-400">+</span>
           Add Set
         </h3>
 
-        <div className="space-y-3">
+        <div className="space-y-5">
           <select
             id="workout-exercise-select"
             value={currentExercise}
             onChange={(e) => setCurrentExercise(e.target.value)}
-            className="input-field"
+            className="input-field py-3 text-base"
           >
             <option value="">Select exercise...</option>
             {availableExercises.map((ex) => (
@@ -194,16 +194,16 @@ export default function ActiveWorkout() {
 
       {/* Logged Sets */}
       {Object.keys(groupedLogs).length > 0 && (
-        <div className="space-y-3 animate-fade-in-up stagger-3">
-          <h3 className="text-sm font-semibold text-slate-300">Logged Sets</h3>
+        <div className="space-y-4 animate-fade-in-up stagger-3">
+          <h3 className="text-base font-semibold text-slate-300">Logged Sets</h3>
           {Object.entries(groupedLogs).map(([exerciseId, group]) => (
-            <div key={exerciseId} className="glass-card p-4">
-              <h4 className="font-semibold text-white text-sm mb-2">{group.name}</h4>
-              <div className="space-y-1.5">
+            <div key={exerciseId} className="glass-card p-6">
+              <h4 className="font-semibold text-white text-base mb-3">{group.name}</h4>
+              <div className="space-y-2">
                 {group.sets.map((set) => (
                   <div
                     key={set.index}
-                    className="flex items-center justify-between bg-white/3 rounded-lg px-3 py-2 text-sm group"
+                    className="flex items-center justify-between bg-white/5 rounded-lg px-4 py-3 text-sm md:text-base group"
                   >
                     <div className="flex items-center gap-4">
                       <span className="text-slate-500 text-xs w-14">Set {set.set_number}</span>
@@ -232,14 +232,16 @@ export default function ActiveWorkout() {
 
       {/* Finish Button */}
       {logs.length > 0 && (
-        <button
-          id="workout-finish"
-          onClick={handleFinish}
-          className="btn-gradient w-full text-center text-lg py-4 bg-gradient-to-r from-emerald-500 to-green-600"
-          style={{ background: 'linear-gradient(135deg, #10b981, #059669)' }}
-        >
-          <span>✅ Finish Workout</span>
-        </button>
+        <div className="pt-4">
+          <button
+            id="workout-finish"
+            onClick={handleFinish}
+            className="btn-gradient w-full text-center text-xl py-5 bg-gradient-to-r from-emerald-500 to-green-600 shadow-[0_0_20px_rgba(16,185,129,0.3)] hover:shadow-[0_0_30px_rgba(16,185,129,0.5)] border-emerald-400/30"
+            style={{ background: 'linear-gradient(135deg, #10b981, #059669)' }}
+          >
+            <span>✅ Finish Workout</span>
+          </button>
+        </div>
       )}
     </div>
   );

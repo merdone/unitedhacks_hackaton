@@ -43,9 +43,9 @@ export default function Login() {
         )}
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-6">
           <div>
-            <label className="block text-sm font-medium text-slate-300 mb-1.5">Email</label>
+            <label className="block text-sm font-medium text-slate-300 mb-2">Email</label>
             <input
               id="login-email"
               type="email"
@@ -57,7 +57,7 @@ export default function Login() {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-slate-300 mb-1.5">Password</label>
+            <label className="block text-sm font-medium text-slate-300 mb-2">Password</label>
             <input
               id="login-password"
               type="password"
@@ -69,14 +69,16 @@ export default function Login() {
             />
           </div>
 
-          <button
-            id="login-submit"
-            type="submit"
-            disabled={loading}
-            className="btn-gradient w-full text-center disabled:opacity-50"
-          >
-            <span>{loading ? 'Signing in...' : 'Sign In'}</span>
-          </button>
+          <div className="pt-2">
+            <button
+              id="login-submit"
+              type="submit"
+              disabled={loading}
+              className="btn-gradient w-full text-center disabled:opacity-50"
+            >
+              <span>{loading ? 'Signing in...' : 'Sign In'}</span>
+            </button>
+          </div>
         </form>
 
         <p className="text-center text-sm text-slate-400 mt-6">
