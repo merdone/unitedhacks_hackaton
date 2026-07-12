@@ -5,6 +5,10 @@ import Layout from './components/Layout';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Home from './pages/Home';
+import HowItWorks from './pages/HowItWorks';
+import Features from './pages/Features';
+import Plans from './pages/Plans';
+import Faq from './pages/Faq';
 import Dashboard from './pages/Dashboard';
 import Insights from './pages/Insights';
 import Templates from './pages/Templates';
@@ -28,6 +32,10 @@ function AnimatedRoutes() {
       <Routes location={location} key={location.pathname}>
         {/* Public */}
         <Route path="/" element={<Home />} />
+        <Route path="/how-it-works" element={<HowItWorks />} />
+        <Route path="/features" element={<Features />} />
+        <Route path="/plans" element={<Plans />} />
+        <Route path="/faq" element={<Faq />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
 

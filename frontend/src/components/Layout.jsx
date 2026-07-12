@@ -113,40 +113,55 @@ export default function Layout({ children }) {
     { to: '/workout', label: 'Workout', icon: WorkoutIcon },
   ];
 
+  const publicLinks = [
+    { to: '/', label: 'Overview' },
+    { to: '/how-it-works', label: 'How it works' },
+    { to: '/features', label: 'Features' },
+    { to: '/plans', label: 'Plans' },
+    { to: '/faq', label: 'FAQ' },
+  ];
+
   const linkClass = ({ isActive }) =>
-    `flex items-center gap-2.5 px-4 py-2.5 rounded-md text-sm font-medium transition-all duration-200 ${
-      isActive
-        ? 'bg-gradient-to-r from-cyan-500/20 to-purple-500/20 text-white border border-white/10'
-        : 'text-slate-400 hover:text-white hover:bg-white/5'
-    }`;
+    `app-nav-link ${isActive ? 'app-nav-link-active' : ''}`;
 
   return (
     <div className="relative min-h-screen bg-dark-950">
-      <nav
-        className="sticky top-0 z-50 mx-4 mt-4 flex items-center justify-between rounded-md border border-white/10 bg-slate-950/80 px-4 py-3 shadow-[0_16px_45px_rgba(0,0,0,0.28)] backdrop-blur-xl sm:px-6"
-        aria-label="Main navigation"
-      >
+      <nav className="site-header" aria-label="Main navigation">
         <Link
           to="/"
-          className="flex items-center gap-3 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400"
+          className="site-brand"
           onClick={() => setMobileOpen(false)}
         >
-          <span className="flex h-9 w-9 items-center justify-center rounded-md bg-gradient-to-br from-cyan-500 to-purple-600 text-lg font-bold text-white">
-            F
-          </span>
-          <span className="hidden text-lg font-bold gradient-text sm:inline">FitPulse</span>
+          <span>F</span>
+          <strong>FitPulse</strong>
         </Link>
 
-        {isLoggedIn && (
-          <div className="hidden items-center gap-1 overflow-x-auto md:flex">
-            {navLinks.map((link) => (
-              <NavLink key={link.to} to={link.to} className={linkClass}>
-                <link.icon />
-                {link.label}
-              </NavLink>
-            ))}
-          </div>
-        )}
+        <div className="site-nav-wrap">
+          {isLoggedIn ? (
+            <div className="app-nav">
+              {navLinks.map((link) => (
+                <NavLink key={link.to} to={link.to} className={linkClass}>
+                  <link.icon />
+                  {link.label}
+                </NavLink>
+              ))}
+            </div>
+          ) : (
+            <div className="public-nav">
+              {publicLinks.map((link) => (
+                <NavLink
+                  key={link.to}
+                  to={link.to}
+                  className={({ isActive }) =>
+                    `public-nav-link ${isActive ? 'public-nav-link-active' : ''}`
+                  }
+                >
+                  {link.label}
+                </NavLink>
+              ))}
+            </div>
+          )}
+        </div>
 
         <div className="flex items-center gap-3">
           {isLoggedIn ? (
@@ -154,10 +169,7 @@ export default function Layout({ children }) {
               Logout
             </button>
           ) : (
-            <NavLink
-              to="/login"
-              className="hidden items-center justify-center rounded-md bg-gradient-to-r from-cyan-500 to-violet-500 px-5 py-3 text-sm font-extrabold text-white shadow-[0_12px_30px_rgba(34,211,238,0.18)] transition hover:from-cyan-400 hover:to-violet-400 sm:inline-flex"
-            >
+            <NavLink to="/login" className="site-login">
               <span>Sign In</span>
             </NavLink>
           )}
@@ -177,49 +189,50 @@ export default function Layout({ children }) {
             <UserIcon />
           </NavLink>
 
-          {isLoggedIn && (
-            <button
-              type="button"
-              onClick={() => setMobileOpen((open) => !open)}
-              className="text-slate-400 transition-colors hover:text-white md:hidden"
-              aria-label={mobileOpen ? 'Close navigation menu' : 'Open navigation menu'}
-              aria-expanded={mobileOpen}
-            >
-              <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                {mobileOpen ? (
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M6 18L18 6M6 6l12 12"
-                  />
-                ) : (
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M4 6h16M4 12h16M4 18h16"
-                  />
-                )}
-              </svg>
-            </button>
-          )}
+          <button
+            type="button"
+            onClick={() => setMobileOpen((open) => !open)}
+            className="site-menu-button"
+            aria-label={mobileOpen ? 'Close navigation menu' : 'Open navigation menu'}
+            aria-expanded={mobileOpen}
+          >
+            <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              {mobileOpen ? (
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              ) : (
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M4 6h16M4 12h16M4 18h16"
+                />
+              )}
+            </svg>
+          </button>
         </div>
       </nav>
 
-      {mobileOpen && isLoggedIn && (
-        <div className="relative z-50 mx-4 mt-2 flex flex-col gap-1 rounded-md border border-white/10 bg-slate-950/95 p-3 shadow-xl backdrop-blur-xl md:hidden">
-          {navLinks.map((link) => (
-            <NavLink
-              key={link.to}
-              to={link.to}
-              className={linkClass}
-              onClick={() => setMobileOpen(false)}
-            >
-              <link.icon />
-              {link.label}
-            </NavLink>
-          ))}
+      {mobileOpen && (
+        <div className="site-mobile-menu">
+          {(isLoggedIn ? navLinks : publicLinks).map((link) => {
+            const Icon = link.icon;
+            return (
+              <NavLink
+                key={link.to}
+                to={link.to}
+                className={linkClass}
+                onClick={() => setMobileOpen(false)}
+              >
+                {Icon && <Icon />}
+                {link.label}
+              </NavLink>
+            );
+          })}
         </div>
       )}
 
