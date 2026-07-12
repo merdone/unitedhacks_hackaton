@@ -3,10 +3,11 @@ from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import select
 import sys
-import os
+from pathlib import Path
 
-# Add project root to sys.path
-sys.path.append("/Users/volodymyrkamenchuk/Documents/UnitedHacks/unitedhacks_hackaton")
+# Make the script runnable from any working directory.
+PROJECT_ROOT = Path(__file__).resolve().parent
+sys.path.insert(0, str(PROJECT_ROOT))
 
 from backend.config import settings
 from backend.models import Exercise

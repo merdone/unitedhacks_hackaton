@@ -1,17 +1,18 @@
-from pydantic_settings import BaseSettings
-from dotenv import dotenv_values
 from pathlib import Path
 
-path = Path(__file__).parent.parent.resolve() / ".env"
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
-values = dotenv_values(path)
+ENV_FILE = Path(__file__).resolve().parents[1] / ".env"
+
 
 class Settings(BaseSettings):
-    DATABASE_URL: str = values.get("DATABASE_URL")
-    SECRET_KEY: str = values.get("SECRET_KEY")
-    ALGORITHM: str = values.get("ALGORITHM")
-    ACCESS_TOKEN_EXPIRE_MINUTES: int = int(values.get("ACCESS_TOKEN_EXPIRE_MINUTES"))
-    OPENAI_API_KEY: str = values.get("OPENAI_API_KEY")
+    model_config = SettingsConfigDict(env_file=ENV_FILE, env_file_encoding="utf-8", extra="ignore")
+
+    DATABASE_URL: str = "postgresql+asyncpg://postgres:postgres@localhost:5432/fitpulse"
+    SECRET_KEY: str = "dev-secret-key-change-me"
+    ALGORITHM: str = "HS256"
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = 1440
+    OPENAI_API_KEY: str | None = None
 
 
 settings = Settings()

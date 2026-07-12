@@ -1,8 +1,28 @@
 import { useEffect, useRef, useState } from 'react';
-import { ArrowUpRight, LayoutDashboard, LogIn, Menu, X } from 'lucide-react';
-import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
+import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { Link, Outlet } from 'react-router-dom';
+import AppIcon from './AppIcon';
 import BrandMark from './BrandMark';
+
+function ArrowUpRight({ className, strokeWidth }) {
+  return <AppIcon name="arrowUpRight" className={className} strokeWidth={strokeWidth} />;
+}
+
+function LayoutDashboard({ className, strokeWidth }) {
+  return <AppIcon name="dashboard" className={className} strokeWidth={strokeWidth} />;
+}
+
+function LogIn({ className, strokeWidth }) {
+  return <AppIcon name="arrowRight" className={className} strokeWidth={strokeWidth} />;
+}
+
+function Menu({ className, strokeWidth }) {
+  return <AppIcon name="menu" className={className} strokeWidth={strokeWidth} />;
+}
+
+function X({ className, strokeWidth }) {
+  return <AppIcon name="x" className={className} strokeWidth={strokeWidth} />;
+}
 
 const navigation = [
   { label: 'How it works', href: '#how-it-works' },

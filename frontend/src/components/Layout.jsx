@@ -1,102 +1,99 @@
+import { useEffect, useState } from 'react';
+import { AnimatePresence, MotionConfig, motion, useReducedMotion } from 'framer-motion';
 import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import AppBackdrop from './AppBackdrop';
+import AppIcon from './AppIcon';
+import BrandMark from './BrandMark';
 
-function DashboardIcon() {
-  return (
-    <svg aria-hidden="true" className="h-4 w-4" viewBox="0 0 24 24" fill="none">
-      <path
-        d="M4 13h6v7H4v-7Zm10-9h6v16h-6V4ZM4 4h6v5H4V4Z"
-        stroke="currentColor"
-        strokeWidth="1.8"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
+const appLinks = [
+  { to: '/dashboard', label: 'Overview', icon: 'dashboard' },
+  { to: '/checkin', label: 'Check-in', icon: 'checkin' },
+  { to: '/workout', label: 'Workout', icon: 'dumbbell' },
+  { to: '/insights', label: 'Insights', icon: 'barChart' },
+  { to: '/templates', label: 'Plans', icon: 'template' },
+  { to: '/recovery', label: 'Recovery', icon: 'recovery' },
+];
 
-function CheckinIcon() {
-  return (
-    <svg aria-hidden="true" className="h-4 w-4" viewBox="0 0 24 24" fill="none">
-      <path
-        d="M8 7h8M8 12h5M9 17l-2-2m0 0 2-2m-2 2h10"
-        stroke="currentColor"
-        strokeWidth="1.9"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M6 3h12a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z"
-        stroke="currentColor"
-        strokeWidth="1.7"
-      />
-    </svg>
-  );
-}
+const publicLinks = [
+  { to: '/', label: 'Overview', icon: 'pulse', end: true },
+  { to: '/how-it-works', label: 'How it works', icon: 'layers' },
+  { to: '/features', label: 'Features', icon: 'spark' },
+  { to: '/plans', label: 'Plans', icon: 'template' },
+  { to: '/faq', label: 'FAQ', icon: 'message' },
+];
 
-function WorkoutIcon() {
-  return (
-    <svg aria-hidden="true" className="h-4 w-4" viewBox="0 0 24 24" fill="none">
-      <path
-        d="M6 8v8M18 8v8M3 10v4m18-4v4M6 12h12"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-      />
-    </svg>
-  );
-}
+function NavItem({ item, mobile = false, onClick }) {
+  const className = mobile
+    ? ({ isActive }) =>
+        [
+          'group relative flex items-center gap-3 overflow-hidden rounded-2xl px-4 py-3.5 text-sm font-semibold transition',
+          isActive
+            ? 'bg-white/[0.09] text-white'
+            : 'text-slate-400 hover:bg-white/[0.05] hover:text-slate-100',
+        ].join(' ')
+    : ({ isActive }) =>
+        [
+          'group relative flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold transition',
+          isActive
+            ? 'text-white'
+            : 'text-slate-400 hover:bg-white/[0.05] hover:text-slate-100',
+        ].join(' ');
 
-function InsightsIcon() {
   return (
-    <svg aria-hidden="true" className="h-4 w-4" viewBox="0 0 24 24" fill="none">
-      <path d="M4 19V5m4 14v-6m4 6V8m4 11v-9m4 9V4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-    </svg>
-  );
-}
-
-function TemplatesIcon() {
-  return (
-    <svg aria-hidden="true" className="h-4 w-4" viewBox="0 0 24 24" fill="none">
-      <path d="M4 5h16M4 12h16M4 19h10" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-      <path d="M7 3v4M17 10v4M10 17v4" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-    </svg>
-  );
-}
-
-function RecoveryIcon() {
-  return (
-    <svg aria-hidden="true" className="h-4 w-4" viewBox="0 0 24 24" fill="none">
-      <path
-        d="M12 21s7-4.2 7-10.2A4.8 4.8 0 0 0 12 6.6 4.8 4.8 0 0 0 5 10.8C5 16.8 12 21 12 21Z"
-        stroke="currentColor"
-        strokeWidth="1.8"
-        strokeLinejoin="round"
-      />
-      <path d="M9 12h2l1-2 2 5 1-3h2" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  );
-}
-
-function UserIcon() {
-  return (
-    <svg aria-hidden="true" className="h-5 w-5" viewBox="0 0 24 24" fill="none">
-      <path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z" stroke="currentColor" strokeWidth="1.9" />
-      <path
-        d="M4.5 20a7.5 7.5 0 0 1 15 0"
-        stroke="currentColor"
-        strokeWidth="1.9"
-        strokeLinecap="round"
-      />
-    </svg>
+    <NavLink to={item.to} end={item.end} className={className} onClick={onClick}>
+      {({ isActive }) => (
+        <>
+          {isActive && (
+            <motion.span
+              layoutId={mobile ? 'mobile-navigation-indicator' : 'desktop-navigation-indicator'}
+              className={
+                mobile
+                  ? 'absolute inset-0 rounded-2xl border border-cyan-300/15 bg-cyan-300/[0.08]'
+                  : 'absolute inset-x-2 bottom-0 h-px bg-gradient-to-r from-transparent via-cyan-300 to-transparent'
+              }
+              transition={{ type: 'spring', stiffness: 360, damping: 30 }}
+            />
+          )}
+          <AppIcon
+            name={item.icon}
+            className="relative h-4 w-4 shrink-0 text-cyan-200 transition group-hover:text-cyan-100"
+            strokeWidth={2}
+          />
+          <span className="relative">{item.label}</span>
+          {mobile && (
+            <AppIcon
+              name="chevronRight"
+              className="relative ml-auto h-4 w-4 text-slate-600 transition group-hover:translate-x-0.5 group-hover:text-cyan-200"
+            />
+          )}
+        </>
+      )}
+    </NavLink>
   );
 }
 
 export default function Layout({ children }) {
   const navigate = useNavigate();
   const location = useLocation();
+  const reduceMotion = useReducedMotion();
   const [mobileOpen, setMobileOpen] = useState(false);
-  const isLoggedIn = !!localStorage.getItem('token');
-  const isHomepage = location.pathname === '/';
+  const isLoggedIn = Boolean(localStorage.getItem('token'));
+  const links = isLoggedIn ? appLinks : publicLinks;
+
+  useEffect(() => {
+    setMobileOpen(false);
+  }, [location.pathname]);
+
+  useEffect(() => {
+    if (!mobileOpen) return undefined;
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [mobileOpen]);
 
   const handleLogout = () => {
     localStorage.removeItem('token');
@@ -104,141 +101,167 @@ export default function Layout({ children }) {
     navigate('/login');
   };
 
-  const navLinks = [
-    { to: '/dashboard', label: 'Dashboard', icon: DashboardIcon },
-    { to: '/insights', label: 'Insights', icon: InsightsIcon },
-    { to: '/templates', label: 'Templates', icon: TemplatesIcon },
-    { to: '/recovery', label: 'Recovery', icon: RecoveryIcon },
-    { to: '/checkin', label: 'Check-in', icon: CheckinIcon },
-    { to: '/workout', label: 'Workout', icon: WorkoutIcon },
-  ];
-
-  const publicLinks = [
-    { to: '/', label: 'Overview' },
-    { to: '/how-it-works', label: 'How it works' },
-    { to: '/features', label: 'Features' },
-    { to: '/plans', label: 'Plans' },
-    { to: '/faq', label: 'FAQ' },
-  ];
-
-  const linkClass = ({ isActive }) =>
-    `app-nav-link ${isActive ? 'app-nav-link-active' : ''}`;
-
   return (
-    <div className="relative min-h-screen bg-dark-950">
-      <nav className="site-header" aria-label="Main navigation">
-        <Link
-          to="/"
-          className="site-brand"
-          onClick={() => setMobileOpen(false)}
+    <MotionConfig reducedMotion="user">
+      <div className="app-shell min-h-screen overflow-x-clip bg-[#05070b] text-slate-100">
+        <AppBackdrop />
+        <a
+          href="#main-content"
+          className="fixed left-4 top-3 z-[100] -translate-y-20 rounded-full bg-white px-4 py-2 text-sm font-bold text-slate-950 shadow-xl transition-transform focus:translate-y-0"
         >
-          <span>F</span>
-          <strong>FitPulse</strong>
-        </Link>
+          Skip to content
+        </a>
 
-        <div className="site-nav-wrap">
-          {isLoggedIn ? (
-            <div className="app-nav">
-              {navLinks.map((link) => (
-                <NavLink key={link.to} to={link.to} className={linkClass}>
-                  <link.icon />
-                  {link.label}
-                </NavLink>
+        <header className="sticky top-0 z-50 px-3 pt-3 sm:px-5 sm:pt-4">
+          <div className="app-topbar mx-auto flex h-16 max-w-7xl items-center justify-between gap-3 rounded-2xl px-3 sm:px-4">
+            <Link
+              to="/"
+              aria-label="FitPulse home"
+              className="shrink-0 rounded-xl outline-none transition focus-visible:ring-2 focus-visible:ring-cyan-200"
+            >
+              <BrandMark />
+            </Link>
+
+            <nav aria-label="Primary navigation" className="hidden min-w-0 items-center gap-1 lg:flex">
+              {links.map((item) => (
+                <NavItem key={item.to} item={item} />
               ))}
-            </div>
-          ) : (
-            <div className="public-nav">
-              {publicLinks.map((link) => (
-                <NavLink
-                  key={link.to}
-                  to={link.to}
-                  className={({ isActive }) =>
-                    `public-nav-link ${isActive ? 'public-nav-link-active' : ''}`
-                  }
-                >
-                  {link.label}
-                </NavLink>
-              ))}
-            </div>
-          )}
-        </div>
+            </nav>
 
-        <div className="flex items-center gap-3">
-          {isLoggedIn ? (
-            <button type="button" onClick={handleLogout} className="btn-secondary px-4 py-2 text-sm">
-              Logout
-            </button>
-          ) : (
-            <NavLink to="/login" className="site-login">
-              <span>Sign In</span>
-            </NavLink>
-          )}
-
-          <NavLink
-            to={isLoggedIn ? '/profile' : '/login'}
-            aria-label={isLoggedIn ? 'Open profile' : 'Sign in'}
-            title={isLoggedIn ? 'Profile' : 'Sign in'}
-            className={({ isActive }) =>
-              `grid h-11 w-11 place-items-center rounded-full border transition-all duration-200 ${
-                isActive
-                  ? 'border-cyan-400/50 bg-cyan-400/15 text-cyan-200'
-                  : 'border-white/10 bg-white/5 text-slate-200 hover:border-cyan-400/40 hover:bg-white/10'
-              }`
-            }
-          >
-            <UserIcon />
-          </NavLink>
-
-          <button
-            type="button"
-            onClick={() => setMobileOpen((open) => !open)}
-            className="site-menu-button"
-            aria-label={mobileOpen ? 'Close navigation menu' : 'Open navigation menu'}
-            aria-expanded={mobileOpen}
-          >
-            <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              {mobileOpen ? (
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M6 18L18 6M6 6l12 12"
-                />
+            <div className="flex shrink-0 items-center gap-2">
+              {isLoggedIn ? (
+                <>
+                  <NavLink
+                    to="/profile"
+                    aria-label="Open profile"
+                    className={({ isActive }) =>
+                      [
+                        'grid size-10 place-items-center rounded-xl border transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-200',
+                        isActive
+                          ? 'border-cyan-300/35 bg-cyan-300/[0.12] text-cyan-100'
+                          : 'border-white/10 bg-white/[0.045] text-slate-300 hover:border-white/20 hover:bg-white/[0.08] hover:text-white',
+                      ].join(' ')
+                    }
+                  >
+                    <AppIcon name="user" className="h-[18px] w-[18px]" strokeWidth={2} />
+                  </NavLink>
+                  <button
+                    type="button"
+                    onClick={handleLogout}
+                    className="hidden items-center gap-2 rounded-xl border border-white/10 bg-white/[0.045] px-3 py-2 text-sm font-semibold text-slate-300 transition hover:border-rose-300/25 hover:bg-rose-400/[0.08] hover:text-rose-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-200 sm:inline-flex"
+                  >
+                    <AppIcon name="arrowUpRight" className="h-4 w-4" />
+                    Sign out
+                  </button>
+                </>
               ) : (
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M4 6h16M4 12h16M4 18h16"
-                />
+                <>
+                  <Link
+                    to="/login"
+                    className="hidden rounded-xl px-3 py-2 text-sm font-semibold text-slate-300 transition hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-200 sm:inline-flex"
+                  >
+                    Sign in
+                  </Link>
+                  <Link
+                    to="/register"
+                    className="hidden items-center gap-2 rounded-xl bg-white px-3.5 py-2 text-sm font-bold text-slate-950 shadow-[0_10px_30px_rgba(255,255,255,0.12)] transition hover:-translate-y-0.5 hover:bg-cyan-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-200 sm:inline-flex"
+                  >
+                    Start free
+                    <AppIcon name="arrowRight" className="h-4 w-4" strokeWidth={2.2} />
+                  </Link>
+                </>
               )}
-            </svg>
-          </button>
-        </div>
-      </nav>
 
-      {mobileOpen && (
-        <div className="site-mobile-menu">
-          {(isLoggedIn ? navLinks : publicLinks).map((link) => {
-            const Icon = link.icon;
-            return (
-              <NavLink
-                key={link.to}
-                to={link.to}
-                className={linkClass}
-                onClick={() => setMobileOpen(false)}
+              <button
+                type="button"
+                aria-controls="mobile-navigation"
+                aria-expanded={mobileOpen}
+                aria-label={mobileOpen ? 'Close navigation menu' : 'Open navigation menu'}
+                onClick={() => setMobileOpen((open) => !open)}
+                className="grid size-10 place-items-center rounded-xl border border-white/10 bg-white/[0.045] text-slate-200 transition hover:bg-white/[0.09] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-200 lg:hidden"
               >
-                {Icon && <Icon />}
-                {link.label}
-              </NavLink>
-            );
-          })}
-        </div>
-      )}
+                <AppIcon name={mobileOpen ? 'x' : 'menu'} className="h-5 w-5" strokeWidth={2} />
+              </button>
+            </div>
+          </div>
+        </header>
 
-      <main className={isHomepage ? 'relative z-10' : 'relative z-10 mx-auto max-w-5xl px-4 py-12'}>
-        {children}
-      </main>
-    </div>
+        <AnimatePresence>
+          {mobileOpen && (
+            <motion.div
+              className="fixed inset-0 z-40 overflow-y-auto bg-slate-950/55 px-3 pb-6 pt-24 backdrop-blur-lg lg:hidden"
+              initial={reduceMotion ? false : { opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: reduceMotion ? 0 : 0.18 }}
+            >
+              <button
+                type="button"
+                aria-label="Close navigation menu"
+                className="absolute inset-0 cursor-default"
+                onClick={() => setMobileOpen(false)}
+              />
+              <motion.div
+                id="mobile-navigation"
+                role="dialog"
+                aria-modal="true"
+                aria-label="Site navigation"
+                className="app-mobile-menu relative mx-auto max-w-xl rounded-[1.5rem] p-3"
+                initial={reduceMotion ? false : { opacity: 0, y: -12, scale: 0.985 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: -8, scale: 0.985 }}
+                transition={{ duration: reduceMotion ? 0 : 0.22, ease: [0.22, 1, 0.36, 1] }}
+              >
+                <nav aria-label="Mobile navigation" className="grid gap-1">
+                  {links.map((item) => (
+                    <NavItem key={item.to} item={item} mobile onClick={() => setMobileOpen(false)} />
+                  ))}
+                </nav>
+
+                <div className="mt-3 border-t border-white/10 pt-3">
+                  {isLoggedIn ? (
+                    <div className="grid grid-cols-2 gap-2">
+                      <NavLink
+                        to="/profile"
+                        onClick={() => setMobileOpen(false)}
+                        className="flex items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/[0.045] px-3 py-3 text-sm font-semibold text-slate-200"
+                      >
+                        <AppIcon name="user" className="h-4 w-4" />
+                        Profile
+                      </NavLink>
+                      <button
+                        type="button"
+                        onClick={handleLogout}
+                        className="flex items-center justify-center gap-2 rounded-xl border border-rose-300/15 bg-rose-400/[0.07] px-3 py-3 text-sm font-semibold text-rose-100"
+                      >
+                        Sign out
+                        <AppIcon name="arrowUpRight" className="h-4 w-4" />
+                      </button>
+                    </div>
+                  ) : (
+                    <Link
+                      to="/register"
+                      onClick={() => setMobileOpen(false)}
+                      className="flex items-center justify-center gap-2 rounded-xl bg-white px-4 py-3.5 text-sm font-bold text-slate-950"
+                    >
+                      Create your account
+                      <AppIcon name="arrowRight" className="h-4 w-4" strokeWidth={2.2} />
+                    </Link>
+                  )}
+                </div>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        <main
+          id="main-content"
+          tabIndex={-1}
+          className="relative z-10 min-h-[calc(100vh-80px)] outline-none"
+        >
+          {children}
+        </main>
+      </div>
+    </MotionConfig>
   );
 }
