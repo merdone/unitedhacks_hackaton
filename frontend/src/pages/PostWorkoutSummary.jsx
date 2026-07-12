@@ -50,7 +50,7 @@ export default function PostWorkoutSummary() {
 
   const handleDone = () => {
     reset();
-    navigate('/');
+    navigate('/dashboard');
   };
 
   if (!session && !completed) {
@@ -59,7 +59,7 @@ export default function PostWorkoutSummary() {
         <div className="text-6xl mb-4">📊</div>
         <h2 className="text-xl font-bold text-white mb-2">No Workout to Summarize</h2>
         <p className="text-slate-400 mb-6">Complete a workout first.</p>
-        <button onClick={() => navigate('/')} className="btn-gradient">
+        <button onClick={() => navigate('/dashboard')} className="btn-gradient">
           <span>Go to Dashboard</span>
         </button>
       </div>

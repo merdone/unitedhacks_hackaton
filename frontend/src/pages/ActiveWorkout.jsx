@@ -1,19 +1,33 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { exercisesAPI, workoutsAPI } from '../api/apiService';
+import { exercisesAPI } from '../api/apiService';
 import { useWorkout } from '../context/WorkoutContext';
 
 export default function ActiveWorkout() {
   const navigate = useNavigate();
-  const { session, logs, addLog, removeLog, exercises, setExercises } = useWorkout();
+  const { session, logs, addLog, removeLog, setExercises } = useWorkout();
   const [availableExercises, setAvailableExercises] = useState([]);
   const [currentExercise, setCurrentExercise] = useState('');
   const [currentSet, setCurrentSet] = useState({ reps: '', weight: '', rpe: '' });
+  const [newExerciseName, setNewExerciseName] = useState('');
+  const [creatingExercise, setCreatingExercise] = useState(false);
+  const [exerciseError, setExerciseError] = useState('');
   const [elapsedTime, setElapsedTime] = useState(0);
+
+  const loadExercises = useCallback(async () => {
+    try {
+      const res = await exercisesAPI.list();
+      setAvailableExercises(res.data);
+      setExercises(res.data);
+      if (res.data.length > 0) setCurrentExercise(res.data[0].id);
+    } catch (err) {
+      console.error('Failed to load exercises:', err);
+    }
+  }, [setExercises]);
 
   useEffect(() => {
     loadExercises();
-  }, []);
+  }, [loadExercises]);
 
   // Timer
   useEffect(() => {
@@ -25,17 +39,6 @@ export default function ActiveWorkout() {
     }, 1000);
     return () => clearInterval(interval);
   }, [session]);
-
-  const loadExercises = async () => {
-    try {
-      const res = await exercisesAPI.list();
-      setAvailableExercises(res.data);
-      setExercises(res.data);
-      if (res.data.length > 0) setCurrentExercise(res.data[0].id);
-    } catch (err) {
-      console.error('Failed to load exercises:', err);
-    }
-  };
 
   const formatTime = (seconds) => {
     const hrs = Math.floor(seconds / 3600);
@@ -62,6 +65,31 @@ export default function ActiveWorkout() {
     });
 
     setCurrentSet({ ...currentSet, reps: '', rpe: '' });
+  };
+
+  const handleCreateExercise = async () => {
+    const name = newExerciseName.trim();
+    if (!name) return;
+
+    setCreatingExercise(true);
+    setExerciseError('');
+    try {
+      const res = await exercisesAPI.create({
+        name,
+        description: null,
+        target_muscle_groups: [],
+      });
+      const nextExercises = [...availableExercises, res.data];
+      setAvailableExercises(nextExercises);
+      setExercises(nextExercises);
+      setCurrentExercise(res.data.id);
+      setNewExerciseName('');
+    } catch (err) {
+      console.error('Failed to create exercise:', err);
+      setExerciseError('Could not create exercise. Please try again.');
+    } finally {
+      setCreatingExercise(false);
+    }
   };
 
   const handleFinish = () => {
@@ -138,6 +166,38 @@ export default function ActiveWorkout() {
               <option key={ex.id} value={ex.id}>{ex.name}</option>
             ))}
           </select>
+
+          <div className="rounded-xl border border-white/10 bg-white/[0.03] p-3">
+            <label className="block text-xs font-semibold uppercase tracking-wide text-slate-500">
+              Add Exercise
+            </label>
+            <div className="mt-2 flex flex-col gap-2 sm:flex-row">
+              <input
+                id="workout-new-exercise"
+                type="text"
+                className="input-field flex-1"
+                placeholder="e.g. Goblet squat"
+                value={newExerciseName}
+                onChange={(e) => setNewExerciseName(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault();
+                    handleCreateExercise();
+                  }
+                }}
+              />
+              <button
+                id="workout-create-exercise"
+                type="button"
+                onClick={handleCreateExercise}
+                disabled={creatingExercise || !newExerciseName.trim()}
+                className="btn-secondary px-4 py-2.5 text-sm disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                {creatingExercise ? 'Adding...' : 'Add'}
+              </button>
+            </div>
+            {exerciseError && <p className="mt-2 text-sm text-rose-400">{exerciseError}</p>}
+          </div>
 
           <div className="grid grid-cols-3 gap-3">
             <div>

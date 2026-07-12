@@ -50,7 +50,7 @@ export default function ProfileSetup() {
         height: form.height ? parseFloat(form.height) : null,
       };
       await usersAPI.updateProfile(payload);
-      navigate('/');
+      navigate('/dashboard');
     } catch (err) {
       console.error('Failed to save profile:', err);
     } finally {

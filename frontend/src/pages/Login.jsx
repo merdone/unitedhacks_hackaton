@@ -15,7 +15,7 @@ export default function Login() {
     try {
       const res = await authAPI.login(form);
       localStorage.setItem('token', res.data.access_token);
-      navigate('/');
+      navigate('/dashboard');
     } catch (err) {
       setError(err.response?.data?.detail || 'Login failed. Please try again.');
     } finally {
